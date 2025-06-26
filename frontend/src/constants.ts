@@ -1,4 +1,3 @@
-
 export const TESTNET_PACKAGE_ID = "";
 export const DEVNET_PACKAGE_ID = "";
 export const LOCAL_PACKAGE_ID = "";
@@ -12,5 +11,4 @@ export const MAINNET_ADMIN_CAP = "";
 export const TESTNET_DASHBOARD_ID = "";
 export const DEVNET_DASHBOARD_ID = "";
 export const LOCAL_DASHBOARD_ID = "";
-export const MAINNET_DASHBOARD_ID= "";
-
+export const MAINNET_DASHBOARD_ID = "";
