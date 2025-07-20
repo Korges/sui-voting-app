@@ -13,6 +13,7 @@ public struct Moment has key {
     mint_total_supply: u64,
     mint_until: u64,
     mint_addresses: Table<address, bool>,
+    mint_price: u64,
     url: Url
 }
 
