@@ -1,10 +1,17 @@
 module momentary::moment;
 
+// === Imports ===
 use std::string::String;
 use sui::url::Url;
-use sui::clock::{Clock, timestamp_ms};
+use sui::clock::{Self, Clock};
 use sui::table::{Self, Table};
 
+// === Errors ===
+const EMintExpired: u64 = 0;
+const ESupplyExceeded: u64 = 1;
+const EAlreadyMinted: u64 = 2;
+
+// === Structs ===
 public struct Moment has key {
     id: UID,
     creator: address,
@@ -28,6 +35,36 @@ public struct MomentNFT has key {
     moment_id: ID
 }
 
+fun init(ctx: &mut TxContext) {
+    let admin_cap = AdminCap {
+        id: object::new(ctx)
+    };
+
+    transfer::transfer(
+        admin_cap,
+        ctx.sender()
+    );
+}
+
+// === Public Functions ===
+
+public fun mint(self: &mut Moment, clock: &Clock, ctx: &mut TxContext) {
+    assert!(self.mint_expiration > clock.timestamp_ms(), EMintExpired);
+    assert!(self.mint_total_supply > self.mint_count, ESupplyExceeded);
+    assert!(self.mint_addresses.contains(ctx.sender()), EAlreadyMinted);
+
+    self.mint_count = self.mint_count + 1;
+
+    table::add(&mut self.mint_addresses, ctx.sender(), true);
+
+    let moment_nft = MomentNFT {
+        id: object::new(ctx),
+        moment_id: self.id.to_inner()
+    };
+
+    transfer::transfer(moment_nft, ctx.sender());
+}
+
 // === Admin Functions ===
 
 public fun create(
@@ -46,7 +83,7 @@ public fun create(
         creator: ctx.sender(),
         name,
         description,
-        created_at: timestamp_ms(clock),
+        created_at: clock.timestamp_ms(),
         mint_count: 0,
         mint_total_supply,
         mint_expiration,
@@ -60,3 +97,4 @@ public fun create(
 
     id
 }
+
