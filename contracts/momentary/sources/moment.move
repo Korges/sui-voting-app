@@ -11,11 +11,17 @@ const EMintExpired: u64 = 0;
 const ESupplyExceeded: u64 = 1;
 const EAlreadyMinted: u64 = 2;
 
+// === Enums ===
+public enum MomentStatus has store, drop {
+    Active,
+    Delisted,
+}
+
 // === Structs ===
 public struct Moment has key {
     id: UID,
     creator: address,
-    name: String,
+    title: String,
     description: String,
     created_at: u64,
     mint_count: u64,
@@ -23,6 +29,7 @@ public struct Moment has key {
     mint_expiration: u64,
     mint_addresses: Table<address, bool>,
     mint_price: u64,
+    status: MomentStatus,
     url: Url
 }
 
@@ -65,11 +72,37 @@ public fun mint(self: &mut Moment, clock: &Clock, ctx: &mut TxContext) {
     transfer::transfer(moment_nft, ctx.sender());
 }
 
+// === View Functions ===
+
+public fun creator(self: &Moment): address {
+    self.creator
+}
+
+public fun title(self: &Moment): String {
+    self.title
+}
+
+public fun description(self: &Moment): String {
+    self.description
+}
+
+public fun mint_expiration(self: &Moment): u64 {
+    self.mint_expiration
+}
+
+public fun mint_addresses(self: &Moment): &Table<address, bool> {
+    &self.mint_addresses
+}
+
+public fun status(self: &Moment): &MomentStatus {
+    &self.status
+}
+
 // === Admin Functions ===
 
 public fun create(
     _admin_cap: &AdminCap,
-    name: String,
+    title: String,
     description: String,
     mint_total_supply: u64,
     mint_expiration: u64,
@@ -81,7 +114,7 @@ public fun create(
     let moment = Moment {
         id: object::new(ctx),
         creator: ctx.sender(),
-        name,
+        title,
         description,
         created_at: clock.timestamp_ms(),
         mint_count: 0,
@@ -89,6 +122,7 @@ public fun create(
         mint_expiration,
         mint_addresses: table::new(ctx),
         mint_price,
+        status: MomentStatus::Active,
         url,
     };
 
