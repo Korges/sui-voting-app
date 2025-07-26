@@ -1,9 +1,9 @@
 import { Tilt } from '@jdion/tilt-react'
+import { MintModal } from '../components/moment/MintModal';
+import { useState } from "react";
 
 const CollectMomentView = () => {
-  const handleMint = () => {
-    console.log("Mintujemy NFT");
-  };
+  const [isModelOpen, setIsModelOpen] = useState(false);
 
   return (
     <div className="flex h-screen bg-black p-10">
@@ -38,7 +38,7 @@ const CollectMomentView = () => {
           </div>
           <div>
             <button
-              onClick={handleMint}
+              onClick={() => setIsModelOpen(true)}
               className="w-full text-base bg-white text-black py-2 rounded hover:shadow-lg"
             >
               MINT
@@ -46,7 +46,13 @@ const CollectMomentView = () => {
           </div>
         </div>
       </div>
+      <MintModal
+        isOpen={isModelOpen}
+        onClose={() => setIsModelOpen(false)}
+      />
+      
     </div>
+
   );
 };
 
