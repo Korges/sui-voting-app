@@ -1,18 +1,42 @@
+import type { Moment } from "../../types";
+import { useNetworkVariable } from "../../config/networkConfig";
+import { Transaction } from "@mysten/sui/transactions";
+import { SUI_CLOCK_OBJECT_ID } from "@mysten/sui/utils";
+
 type MintModalProps = {
-  isOpen: boolean;
-  onClose: () => void;
+    moment: Moment;
+    isOpen: boolean;
+    onClose: () => void;
+    onMint: () => void;
 };
 
 export const MintModal = ({
+    moment,
     isOpen,
-    onClose
+    onClose,
+    onMint,
 }: MintModalProps) => {
+    const packageId = useNetworkVariable("packageId");
+
     if (!isOpen) return null;
 
     const handleOverlayClick = (e: React.MouseEvent) => {
         if (e.target === e.currentTarget) {
             onClose();
         }
+    };
+
+    const mint = () => {
+        const tx = new Transaction();
+        tx.moveCall({
+            target: `${packageId}::moment::mint`,
+            arguments: [
+                tx.object(moment.id),
+                tx.object(SUI_CLOCK_OBJECT_ID)
+            ]
+        });
+
+        onMint();
     };
 
     return (
@@ -52,10 +76,9 @@ export const MintModal = ({
                 </div>
                 <div>
                     <button
-                    onClick={onClose}
-                    className="w-full border border-gray-300 dark:border-gray-600 px-4 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-                    >
-                    Mint
+                    onClick={() => mint()}
+                    className="w-full border border-gray-300 dark:border-gray-600 px-4 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                        Mint
                     </button>
                 </div>
           </div>

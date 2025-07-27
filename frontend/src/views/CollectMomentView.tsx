@@ -1,9 +1,14 @@
 import { Tilt } from '@jdion/tilt-react'
 import { MintModal } from '../components/moment/MintModal';
 import { useState } from "react";
+import type { Moment } from "../types";
 
 const CollectMomentView = () => {
   const [isModelOpen, setIsModelOpen] = useState(false);
+
+  const moment = {
+    id: 'someId'
+  };
 
   return (
     <div className="flex h-screen bg-black p-10">
@@ -47,8 +52,14 @@ const CollectMomentView = () => {
         </div>
       </div>
       <MintModal
+        moment={moment}
         isOpen={isModelOpen}
         onClose={() => setIsModelOpen(false)}
+        onMint={
+          () => {
+            setIsModelOpen(false)
+          }
+        }
       />
       
     </div>
