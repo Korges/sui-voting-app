@@ -19,7 +19,14 @@ public struct AdminCap has key {
     id: UID,
 }
 
+public struct CreatorCap has key {
+  id: UID,
+  creator: address
+}
+
 public struct DASHBOARD has drop {}
+
+/// === Init (deploy-time) ===
 
 fun init(otw: DASHBOARD, ctx: &mut TxContext) {
     let otw = otw;
@@ -31,7 +38,7 @@ fun init(otw: DASHBOARD, ctx: &mut TxContext) {
     );
 }
 
-public fun new(otw: DASHBOARD, ctx: &mut TxContext) {
+fun new(otw: DASHBOARD, ctx: &mut TxContext) {
     assert!(types::is_one_time_witness(&otw), EInvalidOtw);
 
     let dashboard = Dashboard {
@@ -40,4 +47,18 @@ public fun new(otw: DASHBOARD, ctx: &mut TxContext) {
     };
 
     transfer::share_object(dashboard);
+}
+
+/// === Admin Functions ===
+
+public fun grant_creator_cap(_admin_cap: &AdminCap, creator_address: address, ctx: &mut TxContext) {
+  transfer::transfer(
+    CreatorCap {id: object::new(ctx), creator: creator_address}, 
+    ctx.sender()
+  );
+}
+
+public fun revoke_creator_cap(admin: &AdminCap, cap: CreatorCap) {
+  let CreatorCap {id, creator: _} = cap;
+  object::delete(id);
 }
