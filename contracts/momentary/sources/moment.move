@@ -1,23 +1,28 @@
 module momentary::moment;
 
 // === Imports ===
+
 use std::string::String;
 use sui::url::Url;
-use sui::clock::{Self, Clock};
+use sui::clock::{Clock};
 use sui::table::{Self, Table};
+use momentary::dashboard::AdminCap;
 
 // === Errors ===
+
 const EMintExpired: u64 = 0;
 const ESupplyExceeded: u64 = 1;
 const EAlreadyMinted: u64 = 2;
 
 // === Enums ===
+
 public enum MomentStatus has store, drop {
     Active,
     Delisted,
 }
 
 // === Structs ===
+
 public struct Moment has key {
     id: UID,
     creator: address,
@@ -29,12 +34,11 @@ public struct Moment has key {
     mint_expiration: u64,
     mint_addresses: Table<address, bool>,
     mint_price: u64,
-    status: MomentStatus,
-    url: Url
+    status: MomentStatus
 }
 
-public struct AdminCap has key {
-    id: UID,
+public struct Momentary has key {
+    id: UID
 }
 
 public struct MomentNFT has key {
@@ -42,16 +46,7 @@ public struct MomentNFT has key {
     moment_id: ID
 }
 
-fun init(ctx: &mut TxContext) {
-    let admin_cap = AdminCap {
-        id: object::new(ctx)
-    };
 
-    transfer::transfer(
-        admin_cap,
-        ctx.sender()
-    );
-}
 
 // === Public Functions ===
 
@@ -107,7 +102,6 @@ public fun create(
     mint_total_supply: u64,
     mint_expiration: u64,
     mint_price: u64,
-    url: Url,
     clock: &Clock, 
     ctx: &mut TxContext
 ): ID {
@@ -122,8 +116,7 @@ public fun create(
         mint_expiration,
         mint_addresses: table::new(ctx),
         mint_price,
-        status: MomentStatus::Active,
-        url,
+        status: MomentStatus::Active
     };
 
     let id = moment.id.to_inner();

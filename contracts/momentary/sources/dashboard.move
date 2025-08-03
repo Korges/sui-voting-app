@@ -31,7 +31,7 @@ fun init(otw: DASHBOARD, ctx: &mut TxContext) {
     );
 }
 
-fun new(otw: DASHBOARD, ctx: &mut TxContext) {
+public fun new(otw: DASHBOARD, ctx: &mut TxContext) {
     assert!(types::is_one_time_witness(&otw), EInvalidOtw);
 
     let dashboard = Dashboard {
