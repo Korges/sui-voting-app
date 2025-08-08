@@ -58,7 +58,7 @@ public fun grant_creator_cap(_admin_cap: &AdminCap, creator_address: address, ct
   );
 }
 
-public fun revoke_creator_cap(admin: &AdminCap, cap: CreatorCap) {
+public fun revoke_creator_cap(_admin: &AdminCap, cap: CreatorCap) {
   let CreatorCap {id, creator: _} = cap;
   object::delete(id);
 }
