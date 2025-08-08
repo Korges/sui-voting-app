@@ -3,7 +3,6 @@ module momentary::moment;
 // === Imports ===
 
 use std::string::String;
-use sui::url::Url;
 use sui::clock::{Clock};
 use sui::table::{Self, Table};
 use momentary::dashboard::AdminCap;
@@ -45,8 +44,6 @@ public struct MomentNFT has key {
     id: UID,
     moment_id: ID
 }
-
-
 
 // === Public Functions ===
 
