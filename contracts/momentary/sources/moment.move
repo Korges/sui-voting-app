@@ -5,17 +5,18 @@ module momentary::moment;
 use std::string::String;
 use sui::clock::{Clock};
 use sui::table::{Self, Table};
-use momentary::dashboard::AdminCap;
+use momentary::dashboard::CreatorCap;
 
 // === Errors ===
 
 const EMintExpired: u64 = 0;
 const ESupplyExceeded: u64 = 1;
 const EAlreadyMinted: u64 = 2;
+const ENotActive: u64 = 3;
 
 // === Enums ===
 
-public enum MomentStatus has store, drop {
+public enum MomentStatus has store, drop, copy {
     Active,
     Delisted,
 }
@@ -36,10 +37,6 @@ public struct Moment has key {
     status: MomentStatus
 }
 
-public struct Momentary has key {
-    id: UID
-}
-
 public struct MomentNFT has key {
     id: UID,
     moment_id: ID
@@ -51,6 +48,7 @@ public fun mint(self: &mut Moment, clock: &Clock, ctx: &mut TxContext) {
     assert!(self.mint_expiration > clock.timestamp_ms(), EMintExpired);
     assert!(self.mint_total_supply > self.mint_count, ESupplyExceeded);
     assert!(self.mint_addresses.contains(ctx.sender()), EAlreadyMinted);
+    assert!(self.status != MomentStatus::Active, ENotActive);
 
     self.mint_count = self.mint_count + 1;
 
@@ -90,10 +88,10 @@ public fun status(self: &Moment): &MomentStatus {
     &self.status
 }
 
-// === Admin Functions ===
+// === Creator Functions ===
 
 public fun create(
-    _admin_cap: &AdminCap,
+    _creator_cap: &CreatorCap,
     title: String,
     description: String,
     mint_total_supply: u64,
