@@ -45,11 +45,11 @@ public struct MomentNFT has key {
 
 // === Public Functions ===
 
-public fun mint(self: &mut Moment, clock: &Clock, ctx: &mut TxContext) {
+public fun mint(self: &mut Moment, clock: &Clock, ctx: &mut TxContext): ID {
     assert!(self.mint_expiration > clock.timestamp_ms(), EMintExpired);
     assert!(self.mint_total_supply > self.mint_count, ESupplyExceeded);
-    assert!(self.mint_addresses.contains(ctx.sender()), EAlreadyMinted);
-    assert!(self.status != MomentStatus::Active, ENotActive);
+    assert!(!self.mint_addresses.contains(ctx.sender()), EAlreadyMinted);
+    assert!(self.status == MomentStatus::Active, ENotActive);
 
     self.mint_count = self.mint_count + 1;
 
@@ -60,7 +60,10 @@ public fun mint(self: &mut Moment, clock: &Clock, ctx: &mut TxContext) {
         moment_id: self.id.to_inner()
     };
 
+    let moment_nft_id = moment_nft.id.to_inner();
     transfer::transfer(moment_nft, ctx.sender());
+
+    moment_nft_id
 }
 
 // === View Functions ===
@@ -123,7 +126,7 @@ public fun create(
 
 public fun deactivate(_creator_cap: &CreatorCap, moment: &mut Moment) {
     assert!(moment.status == MomentStatus::Active, EActive);
-    
+
     moment.status = MomentStatus::Delisted
 }
 
