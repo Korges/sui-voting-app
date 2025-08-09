@@ -13,6 +13,7 @@ const EMintExpired: u64 = 0;
 const ESupplyExceeded: u64 = 1;
 const EAlreadyMinted: u64 = 2;
 const ENotActive: u64 = 3;
+const EActive: u64 = 4;
 
 // === Enums ===
 
@@ -118,5 +119,11 @@ public fun create(
     transfer::share_object(moment);
 
     id
+}
+
+public fun deactivate(_creator_cap: &CreatorCap, moment: &mut Moment) {
+    assert!(moment.status == MomentStatus::Active, EActive);
+    
+    moment.status = MomentStatus::Delisted
 }
 
