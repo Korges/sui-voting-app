@@ -11,8 +11,8 @@ const EInvalidOtw: u64 = 1;
 // === Structs ===
 
 public struct Dashboard has key {
-  id: UID,
-  moments_ids: vector<ID>
+    id: UID,
+    moments_ids: vector<ID>
 }
 
 public struct AdminCap has key {
@@ -20,8 +20,8 @@ public struct AdminCap has key {
 }
 
 public struct CreatorCap has key {
-  id: UID,
-  creator: address
+    id: UID,
+    creator: address
 }
 
 public struct DASHBOARD has drop {}
@@ -33,8 +33,8 @@ fun init(otw: DASHBOARD, ctx: &mut TxContext) {
     new(otw, ctx);
 
     transfer::transfer(
-        AdminCap {id: object::new(ctx)},
-        ctx.sender()
+    AdminCap {id: object::new(ctx)},
+    ctx.sender()
     );
 }
 
@@ -47,18 +47,19 @@ fun new(otw: DASHBOARD, ctx: &mut TxContext) {
     };
 
     transfer::share_object(dashboard);
+
 }
 
 /// === Admin Functions ===
 
 public fun grant_creator_cap(_admin_cap: &AdminCap, creator_address: address, ctx: &mut TxContext) {
-  transfer::transfer(
+    transfer::transfer(
     CreatorCap {id: object::new(ctx), creator: creator_address}, 
     ctx.sender()
-  );
+    );
 }
 
 public fun revoke_creator_cap(_admin: &AdminCap, cap: CreatorCap) {
-  let CreatorCap {id, creator: _} = cap;
-  object::delete(id);
+    let CreatorCap {id, creator: _} = cap;
+    object::delete(id);
 }
