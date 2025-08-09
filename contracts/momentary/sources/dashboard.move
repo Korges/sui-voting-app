@@ -54,8 +54,8 @@ fun new(otw: DASHBOARD, ctx: &mut TxContext) {
 
 public fun grant_creator_cap(_admin_cap: &AdminCap, creator_address: address, ctx: &mut TxContext) {
     transfer::transfer(
-    CreatorCap {id: object::new(ctx), creator: creator_address}, 
-    ctx.sender()
+        CreatorCap {id: object::new(ctx), creator: creator_address}, 
+        ctx.sender()
     );
 }
 
