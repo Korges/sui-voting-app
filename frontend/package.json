@@ -17,6 +17,8 @@
         "@mysten/dapp-kit": "^0.17.0",
         "@mysten/sui": "^1.34.0",
         "@tanstack/react-query": "^5.81.2",
+        "@tanstack/react-router": "^1.131.37",
+        "@tanstack/react-router-devtools": "^1.131.37",
         "react": "^19.1.0",
         "react-dom": "^19.1.0",
         "react-toastify": "^11.0.5"
@@ -25,6 +27,7 @@
         "@eslint/js": "^9.29.0",
         "@jdion/tilt-react": "^1.0.0",
         "@tailwindcss/postcss": "^4.1.11",
+        "@tanstack/router-plugin": "^1.131.37",
         "@types/react": "^19.1.8",
         "@types/react-dom": "^19.1.6",
         "@vitejs/plugin-react": "^4.5.2",

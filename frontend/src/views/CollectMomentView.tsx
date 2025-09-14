@@ -1,7 +1,6 @@
 import { Tilt } from '@jdion/tilt-react'
 import { MintModal } from '../components/moment/MintModal';
 import { useState } from "react";
-import type { Moment } from "../types";
 
 const CollectMomentView = () => {
   const [isModelOpen, setIsModelOpen] = useState(false);
@@ -11,17 +10,16 @@ const CollectMomentView = () => {
   };
 
   return (
-    <div className="flex h-screen bg-black p-10">
-      <div className="w-2/3 flex items-center justify-center">
+    <div className="flex h-full p-10">
+      <div className="flex w-2/3 justify-center items-center">
         <div className="max-w-[60%]">
-
           <Tilt>
             <img src="../public/547.webp" alt="No image" />
           </Tilt>
         </div>
       </div>
 
-      <div className="w-1/3  flex flex-col gap-4">
+      <div className="flex h-full w-1/3 flex-col justify-center gap-4">
         <div className="text-base text-gray-500">AHAPULCO</div>
         <div className="text-4xl text-white">MOMENT NFT</div>
         <div className="mt-4 text-gray-500">
@@ -31,7 +29,7 @@ const CollectMomentView = () => {
         </div>
 
         <div>
-          <div className="my-10 flex flex-1 gap-6 text-white">
+          <div className="my-10 flex  gap-6 text-white">
             <div>
               <div className="text-lg font-semibold">100 / 1000</div>
               <div className="text-sm text-gray-400">Minted</div>

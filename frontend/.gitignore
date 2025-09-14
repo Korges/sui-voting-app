@@ -44,3 +44,7 @@ pnpm-debug.log*
 # Misc
 .vercel/
 .now/
+
+# TanStack Router
+.tanstack/
+src/routeTree.gen.ts
